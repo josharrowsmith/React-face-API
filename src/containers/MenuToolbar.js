@@ -15,14 +15,15 @@ class MenuToolbar extends React.Component {
 
   constructor (props) {
     super(props)
-    this.handleCaptureButtonClick = this.handleCaptureButtonClick.bind(this)
+    this.ToggleFace = this.ToggleFace.bind(this);
+    this.ToggleEmotion = this.ToggleEmotion.bind(this);
 
     this.state = {
       capturing: false,
       text: 'Capture',
       active: true,
-      Emotion: false,
-      face: false
+      isOpen1: false,
+      isOpen2: false
     }
      this.handleClick = this.handleClick.bind(this);
   }
@@ -34,30 +35,34 @@ class MenuToolbar extends React.Component {
       });
   }
 
-  //fix toggle issues later
-  toggleCapturing () {
+  ToggleFace() {
+    this.setState({
+      isOpen1: !this.state.isOpen1
+    });
+    if (this.state.capturing) {
+      this.setState({capturing: false, text: 'Capture'})
+    } else {
+    this.setState(this.props.fetchFace.bind(this, this.props.webcam))
+    this.setState({capturing: true})
+    }
+  }
 
-        if (this.state.capturing) {
-        this.setState({capturing: false, text: 'Capture'})
-        } else if (this.state.capturing==false && this.state.Emotion==true) {
-        this.setState(this.props.fetchEmotion.bind(this, this.props.webcam))
-        this.setState({capturing: true, text: 'Stop Capturing', Emotion: false})
-        }else {
-        this.setState(this.props.fetchFace.bind(this, this.props.webcam))
-        this.setState({capturing: true, text: 'Stop Capturing', Emotion: true})
-      }
-      }
-
-
-
+  ToggleEmotion() {
+    this.setState({
+      isOpen2: !this.state.isOpen2
+    });
+    if (this.state.capturing) {
+      this.setState({capturing: false, text: 'Capture'})
+    } else {
+    this.setState(this.props.fetchEmotion.bind(this, this.props.webcam))
+    this.setState({capturing: true})
+    }
+  }
 
   handleChange (event, index, value) {
     this.setState({value})
   }
 
-  handleCaptureButtonClick () {
-    this.toggleCapturing()
-  }
 
 
   render () {
@@ -71,8 +76,8 @@ class MenuToolbar extends React.Component {
             <CardActions>
               {this.state.active && <Camera />}
               <Toggle label="Camera" labelPosition="right" onToggle={this.handleClick}/>
-              <Toggle label="Detect" labelPosition="right" onToggle={this.handleCaptureButtonClick}/>
-              <Toggle  label="Emotion" labelPosition="right" onToggle={this.handleCaptureButtonClick}/>
+              <Toggle label="Detect" labelPosition="right"   onToggle={this.ToggleFace}/>
+              <Toggle  label="Emotion" labelPosition="right"  onToggle={this.ToggleEmotion}/>
             </CardActions>
           </Card>
         </div>
